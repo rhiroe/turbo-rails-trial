@@ -3,10 +3,12 @@ class BlogsController < ApplicationController
 
   # GET /blogs or /blogs.json
   def index
-    respond_to do |format|
-      format.html { @blogs = Blog.all }
-      format.js { @blogs = Blog.search_by_title(params[:search_title]) }
-    end
+    @blogs = Blog.all
+  end
+
+  def search
+    @blogs = Blog.search_by_title(params[:search_title])
+    render turbo_stream: turbo_stream.replace('blog-list', partial: 'list', locals: { blogs: @blogs })
   end
 
   # GET /blogs/1 or /blogs/1.json
